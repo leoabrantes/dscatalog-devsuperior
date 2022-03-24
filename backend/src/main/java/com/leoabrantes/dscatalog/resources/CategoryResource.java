@@ -23,7 +23,6 @@ public class CategoryResource {
 		List<Category> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 		
-		
 	}
 	
 

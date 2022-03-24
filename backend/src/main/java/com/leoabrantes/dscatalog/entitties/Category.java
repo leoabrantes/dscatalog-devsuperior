@@ -1,4 +1,4 @@
-package com.leoabrantes.dscatalog.entitties;
+																																																																																																																																																																																																																		package com.leoabrantes.dscatalog.entitties;
 
 import java.io.Serializable;
 import java.util.Objects;
