@@ -1,4 +1,4 @@
-																																																																																																																																																																																																																		package com.leoabrantes.dscatalog.entitties;
+package com.leoabrantes.dscatalog.entitties;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+
+
 
 @Entity
 @Table(name = "tb_category")
@@ -22,12 +25,12 @@ public class Category implements Serializable{
 	public Category() {
 	}
 
-	public Category(long id, String name) {
+	public Category(Long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
