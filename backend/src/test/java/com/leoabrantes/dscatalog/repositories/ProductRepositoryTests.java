@@ -65,7 +65,7 @@ public class ProductRepositoryTests {
 	@Test
 	public void returnANoEmptyOptionalProductWhenIdIsNotNull() {
 		
-		Product product = repository.getOne(20L);
+		Optional<Product> product = repository.findById(existingId);
 
 		Assertions.assertNotNull(product);
 
@@ -77,24 +77,6 @@ public class ProductRepositoryTests {
 		Optional<Product> result = repository.findById(nonExistingId);
 		
 		Assertions.assertFalse(result.isPresent());
-
-//		Assertions.assertThrows(EntityNotFoundException.class, () -> {
-//
-//			Product product = repository.getOne(30L);
-//
-//		});
-//		
-//		Product product = null;
-//		
-//		try{
-//		product = repository.getOne(30L);
-//		}
-//		catch (EntityNotFoundException e){
-//			product = null;
-//		}
-//
-//		Assertions.assertNull(product);
-
 
 	}
 
