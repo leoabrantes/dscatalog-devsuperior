@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -73,27 +74,44 @@ public class ProductResourceTests {
 		doNothing().when(service).delete(existingId);
 		doThrow(ResourceNotFoundException.class).when(service).delete(nonExistingId);
 		doThrow(DatabaseException.class).when(service).delete(dependentId);
-		
 	
+	}
+	
+	@Test
+	public void findAllShouldReturnPage() throws Exception {
+		
+		ResultActions result = 
+				mockMvc.perform(get("/products")
+						.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isOk());
+		
+	}
+	
+	@Test
+	public void findByIdShouldReturnProductWhenIdExists() throws Exception{
+		
+		ResultActions result = 
+				mockMvc.perform(get("/products/{id}", existingId)
+						.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isOk());
+		result.andExpect(jsonPath("$.id").exists());
+		result.andExpect(jsonPath("$.name").exists());
+		result.andExpect(jsonPath("$.description").exists());
+		
 	}
 	
 	
 	@Test
-	public void insertShouldReturnCreatedAndProductoDTO()  throws Exception {
-		
-		String jsonBody = objectMapper.writeValueAsString(productDTO);
-		
+	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist()  throws Exception {
 		ResultActions result = 
-				mockMvc.perform(post("/products")
-					.content(jsonBody)
-					.contentType(MediaType.APPLICATION_JSON)
-					.accept(MediaType.APPLICATION_JSON));
+				mockMvc.perform(get("/products/{id}", nonExistingId)
+						.accept(MediaType.APPLICATION_JSON));
 		
-		result.andExpect(status().isCreated());
-		result.andExpect(jsonPath("$.id").exists());
-		result.andExpect(jsonPath("$.name").exists());
-		result.andExpect(jsonPath("$.description").exists());
+		result.andExpect(status().isNotFound());
 	}
+	
 	
 	@Test
 	public void updateShouldReturnProductDTOWhenIdExists() throws Exception{
@@ -128,40 +146,42 @@ public class ProductResourceTests {
 		result.andExpect(status().isNotFound());
 	}
 	
-	
 	@Test
-	public void findAllShouldReturnPage() throws Exception {
+	public void insertShouldReturnCreatedAndProductoDTO()  throws Exception {
+		
+		String jsonBody = objectMapper.writeValueAsString(productDTO);
 		
 		ResultActions result = 
-				mockMvc.perform(get("/products")
+				mockMvc.perform(post("/products")
+						.content(jsonBody)
+						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON));
 		
-		result.andExpect(status().isOk());
-		
-	}
-	
-	@Test
-	public void findByIdShouldReturnProductWhenIdExists() throws Exception{
-		
-		ResultActions result = 
-				mockMvc.perform(get("/products/{id}", existingId)
-						.accept(MediaType.APPLICATION_JSON));
-		
-		result.andExpect(status().isOk());
+		result.andExpect(status().isCreated());
 		result.andExpect(jsonPath("$.id").exists());
 		result.andExpect(jsonPath("$.name").exists());
 		result.andExpect(jsonPath("$.description").exists());
-		
 	}
 	
 	@Test
-	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist()  throws Exception {
+	public void deleteShouldReturnNoContentWhenIdExists()  throws Exception {
+		
 		ResultActions result = 
-				mockMvc.perform(get("/products/{id}", nonExistingId)
+				mockMvc.perform(delete("/products/{id}", existingId)
+						.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isNoContent());
+	}
+	
+	@Test
+	public void deleteShouldReturnNotFoundWhenIdDoesNotExists()  throws Exception {
+		
+		ResultActions result = 
+				mockMvc.perform(delete("/products/{id}", nonExistingId)
 						.accept(MediaType.APPLICATION_JSON));
 		
 		result.andExpect(status().isNotFound());
-	}
 	
+	}
 	
 }
