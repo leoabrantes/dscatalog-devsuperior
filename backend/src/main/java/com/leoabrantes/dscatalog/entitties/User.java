@@ -59,8 +59,6 @@ public class User implements UserDetails, Serializable{
 	}
 
 	
-	
-	
 	public String getEmail() {
 		return email;
 	}
@@ -173,9 +171,6 @@ public class User implements UserDetails, Serializable{
 	public boolean isEnabled() {
 		return true;
 	}
-	
-	
-	
 	
 
 }
